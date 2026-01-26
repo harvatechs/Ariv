@@ -1,0 +1,8 @@
+# Ariv TUI Requirements
+textual>=0.44.0
+
+# Core Ariv requirements (same as main project)
+llama-cpp-python>=0.2.0
+pyyaml>=6.0
+numpy>=1.24.0
+requests>=2.31.0

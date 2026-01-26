@@ -1,0 +1,257 @@
+/* Ariv TUI - Textual CSS Styles */
+
+/* App Container */
+App {
+    background: $surface;
+    color: $text;
+}
+
+/* Header */
+Header {
+    background: $primary;
+    color: $text-muted;
+    height: 3;
+}
+
+Header:hover {
+    background: $primary-lighten-1;
+}
+
+/* Footer */
+Footer {
+    background: $surface-lighten-1;
+    color: $text-muted;
+    height: 1;
+}
+
+/* Settings Panel */
+#settings-panel {
+    width: 30;
+    background: $surface-lighten-2;
+    border-right: solid $primary-darken-2;
+    padding: 1;
+    height: 100%;
+}
+
+#settings-panel .section-title {
+    text-style: bold;
+    margin-bottom: 1;
+    color: $text;
+}
+
+#settings-panel Select {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#settings-panel Checkbox {
+    margin-bottom: 1;
+}
+
+#settings-panel Static {
+    margin-bottom: 1;
+}
+
+/* Chat Container */
+#chat-container {
+    width: 1fr;
+    height: 100%;
+}
+
+#chat-log {
+    height: 1fr;
+    background: $surface;
+    border: solid $primary-darken-3;
+    margin: 1;
+    padding: 1;
+}
+
+/* Input Container */
+#input-container {
+    height: auto;
+    margin: 1;
+    margin-top: 0;
+}
+
+#message-input {
+    width: 1fr;
+    height: 3;
+    margin-right: 1;
+}
+
+#send-btn {
+    width: 10;
+    background: $primary;
+    color: $text;
+}
+
+#send-btn:hover {
+    background: $primary-lighten-1;
+}
+
+/* Buttons */
+Button {
+    background: $surface-lighten-1;
+    color: $text;
+    border: none;
+    margin: 0;
+}
+
+Button:hover {
+    background: $surface-lighten-2;
+}
+
+Button:focus {
+    background: $primary-darken-1;
+}
+
+.action-btn {
+    width: 1fr;
+    margin: 0.5 0;
+}
+
+.primary-btn {
+    background: $primary;
+    color: white;
+}
+
+.primary-btn:hover {
+    background: $primary-lighten-1;
+}
+
+/* Input Fields */
+Input {
+    background: $surface;
+    border: solid $primary-darken-3;
+    color: $text;
+}
+
+Input:focus {
+    border: solid $primary;
+}
+
+/* Select Dropdown */
+Select {
+    background: $surface;
+    border: solid $primary-darken-3;
+    color: $text;
+}
+
+Select:focus {
+    border: solid $primary;
+}
+
+/* Checkbox */
+Checkbox {
+    color: $text;
+}
+
+Checkbox > .toggle--label {
+    color: $text;
+}
+
+/* Rule (Divider) */
+Rule {
+    color: $primary-darken-2;
+    height: 1;
+    margin: 1 0;
+}
+
+/* Loading Indicator */
+LoadingIndicator {
+    color: $primary;
+}
+
+/* Static Text */
+Static {
+    color: $text;
+}
+
+/* Markdown */
+Markdown {
+    background: $surface;
+    color: $text;
+}
+
+/* Modal/Dialog */
+Modal {
+    background: $surface;
+    border: solid $primary;
+    padding: 2;
+}
+
+/* Scrollbar */
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: $surface;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: $primary-darken-2;
+    border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: $primary-darken-1;
+}
+
+/* Focus Styles */
+*:focus {
+    outline: solid $primary;
+    outline-offset: 2px;
+}
+
+/* Dark Theme Adjustments */
+.dark {
+    background: $surface;
+    color: $text;
+}
+
+/* Light Theme Adjustments */
+.light {
+    background: $surface-lighten-1;
+    color: $text-dark;
+}
+
+/* Responsive adjustments */
+@media (max-width: 80) {
+    #settings-panel {
+        width: 25;
+    }
+}
+
+@media (max-width: 60) {
+    #settings-panel {
+        width: 20;
+    }
+}
+
+/* Message styling in chat log */
+#chat-log .user-message {
+    color: $secondary;
+}
+
+#chat-log .bot-message {
+    color: $primary;
+}
+
+#chat-log .error-message {
+    color: $error;
+}
+
+/* Status indicators */
+.status-online {
+    color: $success;
+}
+
+.status-offline {
+    color: $error;
+}
+
+.status-thinking {
+    color: $warning;
+}

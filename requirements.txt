@@ -1,10 +1,10 @@
-# Maha-System: Indian AI Orchestra
+# Ariv: The Indian AI Orchestra - Production Requirements
 # Core dependencies for running on Google Colab / Low-end GPU
 
 # LLM Inference (GGUF format support)
 llama-cpp-python>=0.2.0
 
-# API and Web Framework (optional, for deployment)
+# API and Web Framework (for deployment)
 fastapi>=0.100.0
 uvicorn>=0.23.0
 pydantic>=2.0.0
@@ -18,7 +18,7 @@ pyyaml>=6.0
 numpy>=1.24.0
 
 # Benchmarking
-datasets>=2.14.0  # For loading evaluation datasets
+datasets>=2.14.0
 
 # LangChain/LangGraph (optional extensions)
 langgraph>=0.0.20
@@ -27,6 +27,10 @@ langchain>=0.1.0
 # Development
 pytest>=7.4.0
 black>=23.0.0
+
+# Additional utilities
+requests>=2.31.0
+psutil>=5.9.0  # System monitoring
 
 # Notes for Google Colab:
 # 1. Install llama-cpp-python with CUDA:

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ariv - Indian AI Orchestra</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-music"></i>
+                    <h1>Ariv</h1>
+                </div>
+                <div class="subtitle">Indian AI Orchestra</div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Ready</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="language-selector">
+                    <label for="language-select">Language:</label>
+                    <select id="language-select" class="language-dropdown">
+                        <option value="hindi">हिन्दी (Hindi)</option>
+                        <option value="tamil">தமிழ் (Tamil)</option>
+                        <option value="bengali">বাংলা (Bengali)</option>
+                        <option value="telugu">తెలుగు (Telugu)</option>
+                        <option value="marathi">मराठी (Marathi)</option>
+                        <option value="gujarati">ગુજરાતી (Gujarati)</option>
+                        <option value="kannada">ಕನ್ನಡ (Kannada)</option>
+                        <option value="malayalam">മലയാളം (Malayalam)</option>
+                        <option value="odia">ଓଡ଼ିଆ (Odia)</option>
+                        <option value="punjabi">ਪੰਜਾਬੀ (Punjabi)</option>
+                        <option value="english">English</option>
+                        <option value="hinglish">Hinglish</option>
+                    </select>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>Settings</h3>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enable-critic" checked>
+                            Enable Critic
+                        </label>
+                        <small>Adversarial verification</small>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enable-deep-cot" checked>
+                            Deep Reasoning
+                        </label>
+                        <small>Multi-step chain-of-thought</small>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enable-self-consistency" checked>
+                            Self-Consistency
+                        </label>
+                        <small>Multiple reasoning paths</small>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enable-tools">
+                            Enable Tools
+                        </label>
+                        <small>Calculator, code execution</small>
+                    </div>
+                </div>
+
+                <div class="stats-panel">
+                    <h3>Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Messages:</span>
+                        <span class="stat-value" id="message-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg Response Time:</span>
+                        <span class="stat-value" id="avg-time">0s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Language:</span>
+                        <span class="stat-value" id="current-lang">Hindi</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Welcome message -->
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-author">Ariv AI</span>
+                                <span class="message-time">Now</span>
+                            </div>
+                            <div class="message-text">
+                                🎵 Welcome to Ariv - The Indian AI Orchestra!
+                                <br><br>
+                                I can help you with reasoning, problem-solving, and questions in all 22 official Indian languages.
+                                <br><br>
+                                Try asking me something in Hindi, Tamil, Bengali, Telugu, or any other supported language!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div class="typing-indicator" id="typing-indicator" style="display: none;">
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            id="message-input" 
+                            class="chat-input" 
+                            placeholder="Type your message here... (Press Shift+Enter for new line, Enter to send)"
+                            rows="1"
+                        ></textarea>
+                        <button id="send-button" class="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-hints">
+                        <small>
+                            <i class="fas fa-lightbulb"></i>
+                            Tip: Try mathematical problems, logical puzzles, or cultural questions!
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

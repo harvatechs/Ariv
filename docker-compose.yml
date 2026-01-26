@@ -1,41 +1,101 @@
 version: '3.8'
 
 services:
-  maha-system:
-    build: .
-    image: maha-system:latest
-    container_name: maha-orchestra
-    runtime: nvidia  # Requires nvidia-docker2
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - CUDA_VISIBLE_DEVICES=0
-      - CACHE_DIR=/app/.cache
-    volumes:
-      - ./models:/app/models:ro  # Mount pre-downloaded models
-      - ./.cache:/app/.cache      # Persistent cache
+  # Main API service
+  ariv-api:
+    build:
+      context: .
+      target: production
     ports:
       - "8000:8000"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - ARIV_ENV=production
+      - ARIV_LOG_LEVEL=INFO
+      - ARIV_MODELS_DIR=/app/models
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
-    restart: unless-stopped
+      start_period: 40s
 
-  # Optional: Redis for distributed caching
-  redis:
-    image: redis:7-alpine
-    container_name: maha-cache
-    volumes:
-      - redis-data:/data
+  # GUI service
+  ariv-gui:
+    build:
+      context: .
+      target: gui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ariv-api
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # TUI service (interactive, not for production)
+  ariv-tui:
+    build:
+      context: .
+      target: tui
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data
+    environment:
+      - TERM=xterm-256color
+    profiles:
+      - tui
+
+  # Development service
+  ariv-dev:
+    build:
+      context: .
+      target: development
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - ./models:/app/models:ro
+    environment:
+      - ARIV_ENV=development
+      - ARIV_LOG_LEVEL=DEBUG
+    profiles:
+      - dev
+
+  # Nginx load balancer (for production scaling)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/ssl:/etc/ssl:ro
+    depends_on:
+      - ariv-api
+      - ariv-gui
+    restart: unless-stopped
+    profiles:
+      - production
 
 volumes:
-  redis-data:
+  models:
+    driver: local
+  data:
+    driver: local
+  logs:
+    driver: local
+
+networks:
+  default:
+    name: ariv-network
