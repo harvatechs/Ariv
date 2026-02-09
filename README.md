@@ -1,17 +1,19 @@
-# 🎵 Ariv: The Indian AI Orchestra
+# <p align="center">ArivOS: The Indian AI Orchestra</p>
 
-> **"Silicon Valley burns billions; India uses intelligence."**
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.8%2B-blue" alt="Python 3.8+"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License: Apache 2.0"></a>
+  <a href="#-language-support"><img src="https://img.shields.io/badge/Languages-22%20Official%20Indian-brightgreen.svg" alt="Indian Languages"></a>
+  <a href="gui/"><img src="https://img.shields.io/badge/Interface-GUI%20%26%20TUI-blue" alt="GUI"></a>
+</p>
 
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Indian Languages](https://img.shields.io/badge/Languages-22%20Official%20Indian-brightgreen.svg)](#-language-support)
-[![GUI](https://img.shields.io/badge/Interface-GUI%20%26%20TUI-blue)](gui/)
+<p align="center">
+  <img src="logo.png" alt="Ariv Logo" width="250px">
+</p>
 
 A production-ready, frugal, sovereign AI system that orchestrates India's open-source language models to achieve state-of-the-art reasoning on consumer hardware through **Test-Time Compute (TTC)** and **Cognitive Serialization**.
 
 **Now supporting all 22 official Indian languages with GUI and TUI interfaces!**
-
----
 
 ## 🌟 What's New in Version 2.0
 
