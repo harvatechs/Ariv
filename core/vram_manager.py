@@ -208,8 +208,10 @@ class VRAMManager:
         logger.info("=" * 60)
         logger.info("📊 VRAM SUMMARY")
         logger.info("=" * 60)
-        logger.info(f"💾 Total VRAM: {stats.total_gb:.2f}GB")
-        logger.info(f"📈 Allocated: {stats.allocated_gb:.2f}GB ({stats.allocated_gb/stats.total_gb*100:.1f}%)")
+        total_gb = stats.total_gb
+        allocated_pct = (stats.allocated_gb / total_gb * 100) if total_gb > 0 else 0.0
+        logger.info(f"💾 Total VRAM: {total_gb:.2f}GB")
+        logger.info(f"📈 Allocated: {stats.allocated_gb:.2f}GB ({allocated_pct:.1f}%)")
         logger.info(f"🟡 Reserved: {stats.reserved_gb:.2f}GB")
         logger.info(f"✅ Available: {stats.available_gb:.2f}GB")
         logger.info(f"🧩 Fragmentation: {stats.fragmentation_ratio*100:.1f}%")
