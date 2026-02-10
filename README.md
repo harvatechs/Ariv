@@ -96,6 +96,34 @@ python maha_system.py --query "एक रस्सी की दो टुकड
 
 ---
 
+## ⚡ Low-VRAM Orchestration (ARIVOS)
+
+ARIVOS adds a low-VRAM orchestration layer that routes between Indic-specialized models (Sarvam 2B) and logic/coding controllers (Qwen 2.5 3B). It uses GGUF quantization, llama.cpp inference, and GPU layer offload to fit 4–6GB VRAM devices.
+
+### Quickstart (low VRAM)
+```bash
+python ariv/scripts/probe_hw.py
+bash ariv/scripts/download_models.sh
+arivctl start --host 0.0.0.0 --port 8000
+```
+
+### API usage
+```bash
+curl -X POST http://localhost:8000/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"demo","text":"नमस्ते","preferred_lang":"hi"}'
+```
+
+### CLI
+```bash
+arivctl status
+arivctl bench --models tests/fixtures/tiny.gguf --lang hi --subset dev
+```
+
+See `docs/quickstart.md` and `docs/models.md` for details.
+
+---
+
 ## 🌍 Language Support
 
 Ariv now supports all **22 official Indian languages** as per the Eighth Schedule of the Constitution of India:

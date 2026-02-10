@@ -1,0 +1,75 @@
+models:
+  sarvam-2b-q4_k_m:
+    type: gguf
+    family: sarvam
+    quant: Q4_K_M
+    vram_mb: 2300
+    task: indic
+    preferred_langs: [hi, ta, te, kn, bn, ml, gu, pa, mr, ur]
+    url: https://huggingface.co/rachittshah/sarvam-2b-v0.5-Q4_K_M-GGUF/resolve/main/sarvam-2b-v0.5-q4_k_m.gguf
+    license: https://huggingface.co/rachittshah/sarvam-2b-v0.5-Q4_K_M-GGUF
+    sha256: ""
+    local_path: ariv/models/gguf/sarvam-2b-q4_k_m.gguf
+    fallback:
+      - sarvam-2b-q4_0
+  sarvam-2b-q4_0:
+    type: gguf
+    family: sarvam
+    quant: Q4_0
+    vram_mb: 2100
+    task: indic
+    preferred_langs: [hi, ta, te, kn, bn, ml, gu, pa, mr, ur]
+    url: https://huggingface.co/rachittshah/sarvam-2b-v0.5-Q4_0-GGUF
+    license: https://huggingface.co/rachittshah/sarvam-2b-v0.5-Q4_0-GGUF
+    sha256: ""
+    local_path: ariv/models/gguf/sarvam-2b-q4_0.gguf
+    fallback: []
+  qwen-2.5-3b-q4_k_m:
+    type: gguf
+    family: qwen
+    quant: Q4_K_M
+    vram_mb: 2800
+    task: code_logic
+    preferred_langs: []
+    url: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF
+    license: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF
+    sha256: ""
+    local_path: ariv/models/gguf/qwen-2.5-3b-q4_k_m.gguf
+    fallback:
+      - qwen-2.5-3b-q4_0
+  qwen-2.5-3b-q4_0:
+    type: gguf
+    family: qwen
+    quant: Q4_0
+    vram_mb: 2600
+    task: code_logic
+    preferred_langs: []
+    url: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF
+    license: https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF
+    sha256: ""
+    local_path: ariv/models/gguf/qwen-2.5-3b-q4_0.gguf
+    fallback: []
+  llama-3.2-1b-q4_k_m:
+    type: gguf
+    family: llama
+    quant: Q4_K_M
+    vram_mb: 1200
+    task: general
+    preferred_langs: []
+    url: https://huggingface.co/meta-llama/Llama-3.2-1B-GGUF
+    license: https://huggingface.co/meta-llama/Llama-3.2-1B-GGUF
+    sha256: ""
+    local_path: ariv/models/gguf/llama-3.2-1b-q4_k_m.gguf
+    fallback: []
+  mock-0.1b-q4_0:
+    type: gguf
+    family: mock
+    quant: Q4_0
+    vram_mb: 128
+    task: general
+    preferred_langs: []
+    url: local
+    license: local
+    sha256: ""
+    local_path: tests/fixtures/tiny.gguf
+    fallback: []
