@@ -6,9 +6,14 @@ Production-ready with tool calling, chain-of-thought, and multi-language support
 import os
 import time
 from typing import Dict, Optional, Any, List, Callable
-from llama_cpp import Llama
+try:
+    from llama_cpp import Llama
+    _HAS_LLAMA = True
+except ModuleNotFoundError:  # pragma: no cover - optional runtime dependency
+    Llama = Any  # type: ignore[assignment]
+    _HAS_LLAMA = False
 from .vram_manager import VRAMManager, MemoryProfiler
-from ..tools.registry import ToolRegistry
+from tools.registry import ToolRegistry
 import logging
 
 logger = logging.getLogger("JugaadOrchestrator")
@@ -87,6 +92,11 @@ class JugaadOrchestrator:
         load_start = time.time()
 
         try:
+            if not _HAS_LLAMA:
+                raise ModelLoadError(
+                    "llama_cpp is not installed. Install project dependencies to load GGUF models."
+                )
+
             # Get memory optimization recommendations
             model_size_gb = os.path.getsize(model_path) / (1024**3)
             mem_opt = self.vram_manager.optimize_for_model(model_size_gb)

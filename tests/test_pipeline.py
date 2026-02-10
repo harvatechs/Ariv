@@ -9,6 +9,7 @@ from core.orchestrator import JugaadOrchestrator
 def test_pipeline_phases():
     """Test that all 4 phases execute"""
     mock_orch = Mock()
+    mock_orch.models_config = {}
     mock_orch.generate.return_value = "test output"
 
     pipeline = TRVPipeline(mock_orch, {})
@@ -19,7 +20,7 @@ def test_pipeline_phases():
     pipeline._phase3_critic = Mock(return_value="PASS")
     pipeline._phase4_synthesis = Mock(return_value="final")
 
-    result = pipeline.execute("query", "hindi", enable_critic=True)
+    result = pipeline.execute("query", "hindi", enable_critic=True, enable_deep_cot=False)
 
     # Verify all phases called
     pipeline._phase1_ingestion.assert_called_once()
@@ -32,6 +33,7 @@ def test_pipeline_phases():
 def test_critic_loop():
     """Test critic iteration logic"""
     mock_orch = Mock()
+    mock_orch.models_config = {}
     pipeline = TRVPipeline(mock_orch, {})
 
     # First critic fails, second passes
@@ -40,7 +42,7 @@ def test_critic_loop():
     pipeline._phase1_ingestion = Mock(return_value="english")
     pipeline._phase4_synthesis = Mock(return_value="final")
 
-    result = pipeline.execute("query", "hindi", enable_critic=True)
+    result = pipeline.execute("query", "hindi", enable_critic=True, enable_deep_cot=False)
 
     # Should have 2 critic calls (fail then pass)
     assert pipeline._phase3_critic.call_count == 2
