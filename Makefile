@@ -19,6 +19,7 @@ help:
 	@echo "  make docker-run     - Run Docker container"
 	@echo "  make clean          - Clean cache and temp files"
 	@echo "  make profile        - Run performance profiler"
+	@echo "  make smoke          - Run smoke inference test"
 
 install:
 	$(PIP) install -r requirements.txt
@@ -70,8 +71,11 @@ benchmark-sanskriti:
 	$(PYTHON) benchmarks/sanskriti_eval.py --data data/sanskriti.json --max-samples 100
 
 lint:
-	black core/ utils/ benchmarks/ --check
-	flake8 core/ utils/ benchmarks/ --max-line-length=100
+	black core/ utils/ benchmarks/ ariv/ --check
+	flake8 core/ utils/ benchmarks/ ariv/ --max-line-length=100
 
 format:
-	black core/ utils/ benchmarks/
+	black core/ utils/ benchmarks/ ariv/
+
+smoke:
+	ARIV_MOCK_LLAMA=1 $(PYTHON) -c "from ariv.runner.app import app; print('OK')"

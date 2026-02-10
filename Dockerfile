@@ -82,6 +82,18 @@ ENV ARIV_ENV=production \
 # Default command
 CMD ["python", "deploy/api_wrapper.py", "--host", "0.0.0.0", "--port", "8000"]
 
+# Runner stage for low-VRAM orchestration
+FROM base as runner
+
+COPY . .
+RUN pip install --no-cache-dir -e .
+
+EXPOSE 8000
+
+ENV ARIV_MODELS_YAML=/app/ariv/models/models.yaml
+
+CMD ["uvicorn", "ariv.runner.app:app", "--host", "0.0.0.0", "--port", "8000"]
+
 # GUI stage
 FROM base as gui
 

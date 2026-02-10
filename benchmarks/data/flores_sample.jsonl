@@ -1,0 +1,4 @@
+{"lang": "hi", "subset": "dev", "source": "नमस्ते दुनिया", "reference": "नमस्ते दुनिया"}
+{"lang": "hi", "subset": "dev", "source": "यह एक परीक्षण है", "reference": "यह एक परीक्षण है"}
+{"lang": "hi", "subset": "devtest", "source": "कैसे हैं आप", "reference": "कैसे हैं आप"}
+{"lang": "ta", "subset": "dev", "source": "வணக்கம் உலகம்", "reference": "வணக்கம் உலகம்"}
