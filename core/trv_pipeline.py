@@ -7,8 +7,8 @@ import logging
 import time
 from typing import Dict, List, Optional, Any
 from .orchestrator import JugaadOrchestrator
-from ..config import (INDIAN_LANGUAGES_22, PIPELINE_CONFIG, 
-                     COT_CONFIG, TOOL_CONFIG, ARC_CONFIG)
+from config import (INDIAN_LANGUAGES_22, PIPELINE_CONFIG, 
+                    COT_CONFIG, TOOL_CONFIG, ARC_CONFIG)
 import json
 
 logger = logging.getLogger("TRVPipeline")

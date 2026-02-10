@@ -61,6 +61,15 @@ class LlamaCLI:
         )
 
         assert process.stdout
+        stderr_chunks: List[bytes] = []
+
+        async def _collect_stderr() -> None:
+            assert process.stderr
+            async for chunk in process.stderr:
+                stderr_chunks.append(chunk)
+
+        stderr_task = asyncio.create_task(_collect_stderr())
+
         async for raw_line in process.stdout:
             line = raw_line.decode("utf-8").strip()
             if not line:
@@ -77,6 +86,17 @@ class LlamaCLI:
                 yield str(token)
 
         await process.wait()
+        await stderr_task
+
+        if process.returncode != 0:
+            stderr_tail = b"".join(stderr_chunks).decode("utf-8", errors="replace").strip()
+            if len(stderr_tail) > 1200:
+                stderr_tail = stderr_tail[-1200:]
+            raise RuntimeError(
+                "llama-cli failed: "
+                f"binary={self._binary}, model={model_path}, exit_code={process.returncode}, "
+                f"stderr={stderr_tail or '<empty>'}"
+            )
 
     async def run_chat(
         self,

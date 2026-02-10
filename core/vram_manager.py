@@ -5,7 +5,6 @@ Enhanced for production with monitoring and optimization
 """
 
 import gc
-import torch
 import logging
 import time
 from typing import Optional, Dict, Any
@@ -13,6 +12,11 @@ from dataclasses import dataclass
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("VRAMManager")
+
+try:
+    import torch
+except ModuleNotFoundError:  # pragma: no cover - optional runtime dependency
+    torch = None
 
 @dataclass
 class MemoryStats:
@@ -60,7 +64,7 @@ class VRAMManager:
             gc.collect()
             
         # Step 2: Clear PyTorch CUDA cache multiple times
-        if torch.cuda.is_available():
+        if torch is not None and torch.cuda.is_available():
             for i in range(2 if aggressive else 1):
                 torch.cuda.empty_cache()
                 
@@ -92,7 +96,7 @@ class VRAMManager:
 
     def get_memory_stats(self) -> MemoryStats:
         """Get current GPU memory statistics with fragmentation analysis"""
-        if not torch.cuda.is_available():
+        if torch is None or not torch.cuda.is_available():
             return MemoryStats(
                 allocated_gb=0,
                 reserved_gb=0,

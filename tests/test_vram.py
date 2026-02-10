@@ -2,23 +2,22 @@
 """Tests for VRAM Manager"""
 
 import pytest
-import torch
-from core.vram_manager import VRAMManager
+from core.vram_manager import VRAMManager, torch
 
 def test_vram_stats():
     """Test VRAM stats collection"""
-    if not torch.cuda.is_available():
+    if torch is None or not torch.cuda.is_available():
         pytest.skip("CUDA not available")
 
-    stats = VRAMManager.get_memory_stats()
-    assert stats['available'] == True
-    assert 'allocated_gb' in stats
-    assert 'total_gb' in stats
-    assert stats['total_gb'] > 0
+    manager = VRAMManager()
+    stats = manager.get_memory_stats()
+    assert stats.total_gb > 0
+    assert stats.available_gb >= 0
+    assert stats.allocated_gb >= 0
 
 def test_flush_protocol():
     """Test VRAM flush doesn't crash"""
-    if not torch.cuda.is_available():
+    if torch is None or not torch.cuda.is_available():
         pytest.skip("CUDA not available")
 
     # Allocate some memory
@@ -26,8 +25,9 @@ def test_flush_protocol():
     del x
 
     # Should not raise
-    VRAMManager.flush()
+    manager = VRAMManager()
+    manager.flush()
 
     # Memory should be reduced (or at least not crash)
-    stats = VRAMManager.get_memory_stats()
-    assert stats['available'] == True
+    stats = manager.get_memory_stats()
+    assert stats.available_gb >= 0

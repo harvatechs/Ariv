@@ -31,7 +31,10 @@ class EvalRequest(BaseModel):
 
 
 def _registry_path() -> Path:
-    return Path(os.getenv("ARIV_MODELS_YAML", "ariv/models/models.yaml"))
+    env_path = os.getenv("ARIV_MODELS_YAML")
+    if env_path:
+        return Path(env_path).expanduser().resolve()
+    return (Path(__file__).resolve().parents[1] / "models" / "models.yaml").resolve()
 
 
 app = FastAPI(title="ARIV Runner", version="0.2.0")

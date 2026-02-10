@@ -1,3 +1,4 @@
+import importlib
 import os
 
 from fastapi.testclient import TestClient
@@ -15,3 +16,11 @@ def test_chat_streaming_response() -> None:
     assert response.status_code == 200
     text = response.text
     assert "metadata" in text
+
+
+def test_registry_path_independent_of_cwd(monkeypatch, tmp_path) -> None:
+    monkeypatch.delenv("ARIV_MODELS_YAML", raising=False)
+    monkeypatch.chdir(tmp_path)
+    runner_module = importlib.import_module("ariv.runner.app")
+    importlib.reload(runner_module)
+    assert runner_module.registry.get("mock-0.1b-q4_0").name == "mock-0.1b-q4_0"
