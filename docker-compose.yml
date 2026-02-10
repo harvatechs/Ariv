@@ -1,6 +1,39 @@
 version: '3.8'
 
 services:
+  ariv-runner-cpu:
+    build:
+      context: .
+      target: runner
+    ports:
+      - "9000:8000"
+    volumes:
+      - ./ariv/models/gguf:/app/ariv/models/gguf:ro
+    environment:
+      - ARIV_MODELS_YAML=/app/ariv/models/models.yaml
+      - ARIV_LOG_LEVEL=INFO
+    profiles:
+      - cpu
+
+  ariv-runner-gpu:
+    build:
+      context: .
+      target: runner
+    ports:
+      - "9001:8000"
+    volumes:
+      - ./ariv/models/gguf:/app/ariv/models/gguf:ro
+    environment:
+      - ARIV_MODELS_YAML=/app/ariv/models/models.yaml
+      - ARIV_LOG_LEVEL=INFO
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    profiles:
+      - gpu
+
   # Main API service
   ariv-api:
     build:

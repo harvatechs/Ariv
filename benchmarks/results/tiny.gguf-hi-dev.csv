@@ -1,0 +1,2 @@
+model,lang,subset,bleu,chrf,throughput_tps,latency_p50,latency_p95
+tests/fixtures/tiny.gguf,hi,dev,1.0,1.0,9525.29,0.0003,0.0005

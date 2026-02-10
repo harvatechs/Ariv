@@ -92,6 +92,7 @@ setup(
             "ariv-download=models.download_models:main",
             "ariv-gui=gui.launch:main",
             "ariv-tui=tui.launch:main",
+            "arivctl=ariv.cli:main",
         ],
     },
     include_package_data=True,
