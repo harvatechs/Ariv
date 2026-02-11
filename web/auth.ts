@@ -32,6 +32,7 @@ if (providers.length === 0) {
       authorize: async () => null
     })
   );
+  throw new Error("Configure at least one auth provider (GitHub or Google).");
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

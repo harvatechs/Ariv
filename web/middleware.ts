@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { env } from "@/lib/env";
 import { checkRateLimit } from "@/lib/rate-limit";

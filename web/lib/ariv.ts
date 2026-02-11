@@ -2,6 +2,10 @@ import { env, requireArivApiBaseUrl } from "@/lib/env";
 
 export async function forwardToAriv<T>(path: string, init?: RequestInit): Promise<T> {
   const url = new URL(path, requireArivApiBaseUrl());
+import { env } from "@/lib/env";
+
+export async function forwardToAriv<T>(path: string, init?: RequestInit): Promise<T> {
+  const url = new URL(path, env.ARIV_API_BASE_URL);
 
   const response = await fetch(url, {
     ...init,
