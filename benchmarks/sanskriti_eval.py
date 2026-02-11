@@ -16,12 +16,13 @@ import yaml
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("SANSKRITI")
 
+
 class SanskritiBenchmark:
     """
     Evaluates the Maha-System on the SANSKRITI dataset:
     21,853 question-answer pairs across Indian states/UTs covering:
     - Rituals and festivals
-    - Regional cuisine  
+    - Regional cuisine
     - Local customs and Little Traditions
     - Traditional medicine (Ayurveda)
     """
@@ -48,7 +49,7 @@ class SanskritiBenchmark:
 
         with open(self.data_path) as f:
             data = json.load(f)
-        return data.get('examples', [])
+        return data.get("examples", [])
 
     def evaluate(self, max_samples: int = None) -> Dict:
         """
@@ -56,7 +57,7 @@ class SanskritiBenchmark:
 
         Returns accuracy metrics by category:
         - Overall accuracy
-        - Rituals accuracy  
+        - Rituals accuracy
         - Cuisine accuracy
         - Regional customs accuracy
         """
@@ -69,26 +70,24 @@ class SanskritiBenchmark:
             "rituals": {"correct": 0, "total": 0},
             "cuisine": {"correct": 0, "total": 0},
             "customs": {"correct": 0, "total": 0},
-            "festivals": {"correct": 0, "total": 0}
+            "festivals": {"correct": 0, "total": 0},
         }
 
         logger.info(f"🧪 Running SANSKRITI evaluation on {len(dataset)} samples...")
 
         for item in tqdm(dataset):
-            question = item['question']
-            expected = item['answer']
-            category = item.get('category', 'general')
-            language = item.get('language', 'hindi')
+            question = item["question"]
+            expected = item["answer"]
+            category = item.get("category", "general")
+            language = item.get("language", "hindi")
 
             try:
                 # Run TRV pipeline
                 result = self.pipeline.execute(
-                    query=question,
-                    language=language,
-                    enable_critic=True
+                    query=question, language=language, enable_critic=True
                 )
 
-                predicted = result['final_answer']
+                predicted = result["final_answer"]
 
                 # Simple exact match (can be improved with semantic similarity)
                 is_correct = self._check_answer(predicted, expected)
@@ -101,13 +100,15 @@ class SanskritiBenchmark:
                 if category in category_stats:
                     category_stats[category]["total"] += 1
 
-                self.results.append({
-                    "question": question,
-                    "expected": expected,
-                    "predicted": predicted,
-                    "correct": is_correct,
-                    "category": category
-                })
+                self.results.append(
+                    {
+                        "question": question,
+                        "expected": expected,
+                        "predicted": predicted,
+                        "correct": is_correct,
+                        "category": category,
+                    }
+                )
 
             except Exception as e:
                 logger.error(f"Error on question: {e}")
@@ -121,7 +122,7 @@ class SanskritiBenchmark:
             "overall_accuracy": accuracy,
             "total_samples": total,
             "correct": correct,
-            "by_category": {}
+            "by_category": {},
         }
 
         for cat, stats in category_stats.items():
@@ -130,7 +131,7 @@ class SanskritiBenchmark:
                 metrics["by_category"][cat] = {
                     "accuracy": cat_acc,
                     "correct": stats["correct"],
-                    "total": stats["total"]
+                    "total": stats["total"],
                 }
 
         return metrics
@@ -145,22 +146,22 @@ class SanskritiBenchmark:
 
     def save_results(self, output_path: str = "sanskriti_results.json"):
         """Save detailed results to file"""
-        with open(output_path, 'w') as f:
-            json.dump({
-                "metrics": self.get_metrics(),
-                "predictions": self.results
-            }, f, indent=2, ensure_ascii=False)
+        with open(output_path, "w") as f:
+            json.dump(
+                {"metrics": self.get_metrics(), "predictions": self.results},
+                f,
+                indent=2,
+                ensure_ascii=False,
+            )
         logger.info(f"💾 Results saved to {output_path}")
 
     def get_metrics(self):
         """Return current metrics"""
         if not self.results:
             return {}
-        correct = sum(1 for r in self.results if r['correct'])
-        return {
-            "accuracy": correct / len(self.results),
-            "samples": len(self.results)
-        }
+        correct = sum(1 for r in self.results if r["correct"])
+        return {"accuracy": correct / len(self.results), "samples": len(self.results)}
+
 
 if __name__ == "__main__":
     import argparse
@@ -179,7 +180,7 @@ if __name__ == "__main__":
     print(f"\n📊 SANSKRITI Results:")
     print(f"Overall Accuracy: {metrics['overall_accuracy']:.2%}")
 
-    for cat, stats in metrics['by_category'].items():
+    for cat, stats in metrics["by_category"].items():
         print(f"  {cat}: {stats['accuracy']:.2%} ({stats['correct']}/{stats['total']})")
 
     benchmark.save_results(args.output)

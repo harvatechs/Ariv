@@ -17,7 +17,9 @@ def main() -> None:
     parser.add_argument("--hf-repo", required=True, help="Hugging Face repo path")
     parser.add_argument("--output", required=True, help="Output GGUF path")
     parser.add_argument("--quant", default="Q4_K_M", choices=["Q4_K_M", "Q5_0", "Q4_0"])
-    parser.add_argument("--llama-cpp", default="llama.cpp", help="Path to llama.cpp repo")
+    parser.add_argument(
+        "--llama-cpp", default="llama.cpp", help="Path to llama.cpp repo"
+    )
     args = parser.parse_args()
 
     llama_dir = Path(args.llama_cpp)

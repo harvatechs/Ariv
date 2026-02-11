@@ -53,7 +53,7 @@ def _detect_indic(preferred_lang: Optional[str], text: str) -> bool:
     if preferred_lang and preferred_lang.lower() in INDIC_LANGS:
         return True
     for char in text:
-        if "\u0900" <= char <= "\u0DFF":
+        if "\u0900" <= char <= "\u0dff":
             return True
     return False
 

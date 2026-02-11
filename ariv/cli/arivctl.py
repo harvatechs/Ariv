@@ -43,7 +43,9 @@ def cmd_start(host: str, port: int) -> None:
 def cmd_bench(models: List[str], lang: str, subset: str) -> None:
     from benchmarks.run_bench import run_benchmark
 
-    run_benchmark(models=models, lang=lang, subset=subset, output_dir=Path("benchmarks/results"))
+    run_benchmark(
+        models=models, lang=lang, subset=subset, output_dir=Path("benchmarks/results")
+    )
 
 
 def cmd_download(dry_run: bool) -> None:

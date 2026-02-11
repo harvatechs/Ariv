@@ -94,7 +94,9 @@ def _run_model(model_path: str, prompt: str) -> Tuple[str, float, int]:
     return "".join(result), duration, token_count
 
 
-def run_benchmark(models: List[str], lang: str, subset: str, output_dir: Path) -> Tuple[Path, Path]:
+def run_benchmark(
+    models: List[str], lang: str, subset: str, output_dir: Path
+) -> Tuple[Path, Path]:
     dataset = _load_dataset(lang, subset)
     if not dataset:
         raise ValueError("Dataset not found or empty")
@@ -134,7 +136,16 @@ def run_benchmark(models: List[str], lang: str, subset: str, output_dir: Path) -
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
         writer.writerow(
-            ["model", "lang", "subset", "bleu", "chrf", "throughput_tps", "latency_p50", "latency_p95"]
+            [
+                "model",
+                "lang",
+                "subset",
+                "bleu",
+                "chrf",
+                "throughput_tps",
+                "latency_p50",
+                "latency_p95",
+            ]
         )
         for row in rows:
             writer.writerow(
@@ -174,7 +185,12 @@ def main() -> None:
     parser.add_argument("--subset", default="dev")
     args = parser.parse_args()
 
-    run_benchmark(models=args.models, lang=args.lang, subset=args.subset, output_dir=Path("benchmarks/results"))
+    run_benchmark(
+        models=args.models,
+        lang=args.lang,
+        subset=args.subset,
+        output_dir=Path("benchmarks/results"),
+    )
 
 
 if __name__ == "__main__":
