@@ -81,7 +81,9 @@ class LlamaCLI:
             except json.JSONDecodeError:
                 yield line
                 continue
-            token = payload.get("token") or payload.get("content") or payload.get("text")
+            token = (
+                payload.get("token") or payload.get("content") or payload.get("text")
+            )
             if token:
                 yield str(token)
 
@@ -89,7 +91,9 @@ class LlamaCLI:
         await stderr_task
 
         if process.returncode != 0:
-            stderr_tail = b"".join(stderr_chunks).decode("utf-8", errors="replace").strip()
+            stderr_tail = (
+                b"".join(stderr_chunks).decode("utf-8", errors="replace").strip()
+            )
             if len(stderr_tail) > 1200:
                 stderr_tail = stderr_tail[-1200:]
             raise RuntimeError(

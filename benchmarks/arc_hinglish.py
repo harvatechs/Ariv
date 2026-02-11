@@ -15,6 +15,7 @@ import yaml
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ARC-Hinglish")
 
+
 class ARCHinglishRunner:
     """
     Adapts ARC-AGI style abstract reasoning for Hinglish (Hindi-English code-mixing)
@@ -48,12 +49,14 @@ class ARCHinglishRunner:
         prompt_parts.append("Main neeche diye gaye examples se pattern seekhna hai:")
 
         for i, ex in enumerate(task_examples, 1):
-            desc = ex.get('description', '')
+            desc = ex.get("description", "")
             prompt_parts.append(f"\nExample {i}: {desc}")
             prompt_parts.append(f"Input: {ex['input']}")
             prompt_parts.append(f"Output: {ex['output']}")
 
-        prompt_parts.append(f"\nAb isko solve karo: {test_input.get('description', '')}")
+        prompt_parts.append(
+            f"\nAb isko solve karo: {test_input.get('description', '')}"
+        )
         prompt_parts.append(f"Test Input: {test_input['input']}")
         prompt_parts.append("Test Output:")
 
@@ -68,9 +71,9 @@ class ARCHinglishRunner:
             result = self.pipeline.execute(
                 query=full_prompt,
                 language="hinglish",
-                enable_critic=True  # Self-correction
+                enable_critic=True,  # Self-correction
             )
-            candidates.append(result['final_answer'])
+            candidates.append(result["final_answer"])
 
         # Simple majority voting (exact match on grid)
         prediction = self._majority_vote(candidates)
@@ -79,18 +82,20 @@ class ARCHinglishRunner:
             "prediction": prediction,
             "candidates": candidates,
             "confidence": self._calculate_confidence(candidates),
-            "reasoning": result['reasoning_trace']
+            "reasoning": result["reasoning_trace"],
         }
 
     def _majority_vote(self, candidates: List[str]) -> str:
         """Select most common answer"""
         from collections import Counter
+
         vote_counts = Counter(candidates)
         return vote_counts.most_common(1)[0][0]
 
     def _calculate_confidence(self, candidates: List[str]) -> float:
         """Calculate agreement ratio between candidates"""
         from collections import Counter
+
         vote_counts = Counter(candidates)
         top_count = vote_counts.most_common(1)[0][1]
         return top_count / len(candidates)
@@ -108,12 +113,9 @@ class ARCHinglishRunner:
 
         for task in tasks:
             try:
-                result = self.solve_task(
-                    task['train'],
-                    task['test']
-                )
+                result = self.solve_task(task["train"], task["test"])
 
-                if result['prediction'] == task['test']['output']:
+                if result["prediction"] == task["test"]["output"]:
                     correct += 1
 
                 total += 1
@@ -125,11 +127,8 @@ class ARCHinglishRunner:
         accuracy = correct / total if total > 0 else 0
         logger.info(f"ARC-Hinglish Accuracy: {accuracy:.2%} ({correct}/{total})")
 
-        return {
-            "accuracy": accuracy,
-            "correct": correct,
-            "total": total
-        }
+        return {"accuracy": accuracy, "correct": correct, "total": total}
+
 
 if __name__ == "__main__":
     import argparse
