@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { env } from "@/lib/env";
@@ -24,6 +25,13 @@ if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
 }
 
 if (providers.length === 0) {
+  providers.push(
+    Credentials({
+      name: "Disabled",
+      credentials: {},
+      authorize: async () => null
+    })
+  );
   throw new Error("Configure at least one auth provider (GitHub or Google).");
 }
 

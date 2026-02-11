@@ -46,6 +46,7 @@ web/
 - Output/input sanitization for potentially unsafe content.
 - Hardened response headers (CSP, X-Frame-Options, nosniff, etc.).
 - Secrets only from environment variables.
+- Build-safe auth configuration: deployment builds no longer fail if OAuth env vars are missing; sign-in remains disabled until a provider is configured.
 
 ## Local development
 
