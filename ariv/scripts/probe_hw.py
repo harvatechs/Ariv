@@ -1,10 +1,4 @@
-"""
-module: ariv/scripts/probe_hw.py
-purpose: Hardware capability probing with zero-hard-fail semantics for ARIV model routing
-author: Ariv Engineering
-version: 2.1.0
-dependencies: ariv/models/__init__.py
-"""
+"""Hardware probe utilities for ARIV runtime selection."""
 
 from __future__ import annotations
 
@@ -89,6 +83,8 @@ def _probe_nvidia() -> tuple[str, int] | None:
     mem_mb = _safe_int(mem.replace("MiB", ""), default=0)
     if mem_mb <= 0:
         return None
+    name, mem = [part.strip() for part in first_line.split(",", maxsplit=1)]
+    mem_mb = int(mem.replace("MiB", "").strip())
     return name, mem_mb
 
 
@@ -129,6 +125,11 @@ def _probe_memory_mb() -> tuple[int, int, int, int]:
         if total_kb > 0:
             return cores, threads, total_kb // 1024, available_kb // 1024
 
+                total_kb = int(line.split()[1])
+            elif line.startswith("MemAvailable:"):
+                available_kb = int(line.split()[1])
+        if total_kb:
+            return cores, threads, total_kb // 1024, available_kb // 1024
     return cores, threads, 0, 0
 
 
@@ -158,11 +159,22 @@ def _suggest_models(vram_mb: int, cpu_mem_mb: int) -> list[str]:
     if cpu_mem_mb >= 8000:
         return ["sarvam-2b-q4_0", "llama-3.2-1b-q4_k_m"]
     return ["llama-3.2-1b-q4_k_m"]
+    suggestions: list[str] = []
+    if vram_mb >= 4500:
+        suggestions.extend(["deepseek-r1-distill-qwen-7b", "qwen2.5-7b-instruct", "airavata-7b"])
+    elif vram_mb >= 2000:
+        suggestions.extend(["qwen2.5-coder-3b", "sarvam-2b"])
+    elif cpu_mem_mb >= 8000:
+        suggestions.extend(["smollm2-1.7b", "sarvam-2b"])
+    else:
+        suggestions.append("smollm2-1.7b")
+    return suggestions
 
 
 def probe_hardware_profile() -> HardwareProfile:
     gpu_probe = _probe_nvidia()
     fake_vram = max(_safe_int(os.getenv("ARIV_FAKE_VRAM_MB"), default=0), 0)
+    fake_vram = int(os.getenv("ARIV_FAKE_VRAM_MB", "0"))
     vram_mb = gpu_probe[1] if gpu_probe else fake_vram
     device_name = gpu_probe[0] if gpu_probe else "cpu"
     cpu_cores, cpu_threads, cpu_mem_mb, available_mem_mb = _probe_memory_mb()

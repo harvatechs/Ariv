@@ -30,6 +30,7 @@ def test_probe_hardware_gpu(monkeypatch):
     assert profile.device_name == "RTX-3060"
     assert profile.supports_full_pipeline is True
     assert "sarvam-2b-q4_k_m" in profile.suggested_models
+    assert "deepseek-r1-distill-qwen-7b" in profile.suggested_models
 
 
 def test_probe_hardware_cpu_fallback(monkeypatch):
@@ -43,6 +44,7 @@ def test_probe_hardware_cpu_fallback(monkeypatch):
     assert data["vram_mb"] == 0
     assert data["device_name"] == "cpu"
     assert "llama-3.2-1b-q4_k_m" in data["suggested_models"]
+    assert "smollm2-1.7b" in data["suggested_models"]
 
 
 def test_probe_nvidia_parse_failure(monkeypatch):
