@@ -29,6 +29,7 @@ def test_probe_hardware_gpu(monkeypatch):
     assert profile.vram_mb == 6144
     assert profile.device_name == "RTX-3060"
     assert profile.supports_full_pipeline is True
+    assert "sarvam-2b-q4_k_m" in profile.suggested_models
     assert "deepseek-r1-distill-qwen-7b" in profile.suggested_models
 
 
@@ -42,6 +43,7 @@ def test_probe_hardware_cpu_fallback(monkeypatch):
     assert data["gpu"] is False
     assert data["vram_mb"] == 0
     assert data["device_name"] == "cpu"
+    assert "llama-3.2-1b-q4_k_m" in data["suggested_models"]
     assert "smollm2-1.7b" in data["suggested_models"]
 
 
@@ -54,3 +56,11 @@ def test_probe_nvidia_parse_failure(monkeypatch):
 
     monkeypatch.setattr(probe_hw.subprocess, "run", _fake_run)
     assert probe_hw._probe_nvidia() is None
+
+
+def test_probe_hardware_invalid_fake_vram(monkeypatch):
+    monkeypatch.setattr(probe_hw, "_probe_nvidia", lambda: None)
+    monkeypatch.setenv("ARIV_FAKE_VRAM_MB", "not-an-int")
+
+    profile = probe_hw.probe_hardware_profile()
+    assert profile.vram_mb == 0

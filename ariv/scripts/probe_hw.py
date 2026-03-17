@@ -36,6 +36,13 @@ def _load_psutil() -> Any | None:
     return importlib.import_module("psutil")
 
 
+def _safe_int(value: str | None, default: int = 0) -> int:
+    try:
+        return int((value or str(default)).strip())
+    except (TypeError, ValueError):
+        return default
+
+
 def _detect_environment() -> str:
     if os.getenv("COLAB_RELEASE_TAG"):
         return "colab"
@@ -71,6 +78,11 @@ def _probe_nvidia() -> tuple[str, int] | None:
     first_line = result.stdout.strip().splitlines()[0] if result.stdout.strip() else ""
     if not first_line or "," not in first_line:
         return None
+
+    name, mem = [part.strip() for part in first_line.split(",", maxsplit=1)]
+    mem_mb = _safe_int(mem.replace("MiB", ""), default=0)
+    if mem_mb <= 0:
+        return None
     name, mem = [part.strip() for part in first_line.split(",", maxsplit=1)]
     mem_mb = int(mem.replace("MiB", "").strip())
     return name, mem_mb
@@ -88,12 +100,31 @@ def _probe_memory_mb() -> tuple[int, int, int, int]:
 
     cores = os.cpu_count() or 1
     threads = cores
+
+    if hasattr(os, "sysconf"):
+        try:
+            page_size = int(os.sysconf("SC_PAGE_SIZE"))
+            total_pages = int(os.sysconf("SC_PHYS_PAGES"))
+            avail_pages = int(os.sysconf("SC_AVPHYS_PAGES"))
+            total_mb = (page_size * total_pages) // (1024 * 1024)
+            available_mb = (page_size * avail_pages) // (1024 * 1024)
+            if total_mb > 0:
+                return cores, threads, total_mb, max(available_mb, 0)
+        except (OSError, ValueError, TypeError):
+            pass
+
     meminfo = Path("/proc/meminfo")
     if meminfo.exists():
         total_kb = 0
         available_kb = 0
         for line in meminfo.read_text(encoding="utf-8").splitlines():
             if line.startswith("MemTotal:"):
+                total_kb = _safe_int(line.split()[1], default=0)
+            elif line.startswith("MemAvailable:"):
+                available_kb = _safe_int(line.split()[1], default=0)
+        if total_kb > 0:
+            return cores, threads, total_kb // 1024, available_kb // 1024
+
                 total_kb = int(line.split()[1])
             elif line.startswith("MemAvailable:"):
                 available_kb = int(line.split()[1])
@@ -103,6 +134,31 @@ def _probe_memory_mb() -> tuple[int, int, int, int]:
 
 
 def _suggest_models(vram_mb: int, cpu_mem_mb: int) -> list[str]:
+    try:
+        from ariv.models import ModelRegistry
+
+        registry = ModelRegistry.from_yaml(Path("ariv/models/models.yaml"))
+        candidates = [
+            model
+            for model in registry.list_models()
+            if model.family != "mock" and model.vram_mb <= max(vram_mb, 1)
+        ]
+        candidates = sorted(
+            candidates,
+            key=lambda model: (model.vram_mb, "q4_k_m" in model.name, "sarvam" in model.name),
+            reverse=True,
+        )
+        suggested = [model.name for model in candidates]
+        if suggested:
+            return suggested[:3]
+    except (FileNotFoundError, ModuleNotFoundError, ImportError):
+        pass
+
+    if vram_mb >= 3072:
+        return ["qwen-2.5-3b-q4_k_m", "sarvam-2b-q4_k_m", "llama-3.2-1b-q4_k_m"]
+    if cpu_mem_mb >= 8000:
+        return ["sarvam-2b-q4_0", "llama-3.2-1b-q4_k_m"]
+    return ["llama-3.2-1b-q4_k_m"]
     suggestions: list[str] = []
     if vram_mb >= 4500:
         suggestions.extend(["deepseek-r1-distill-qwen-7b", "qwen2.5-7b-instruct", "airavata-7b"])
@@ -117,6 +173,7 @@ def _suggest_models(vram_mb: int, cpu_mem_mb: int) -> list[str]:
 
 def probe_hardware_profile() -> HardwareProfile:
     gpu_probe = _probe_nvidia()
+    fake_vram = max(_safe_int(os.getenv("ARIV_FAKE_VRAM_MB"), default=0), 0)
     fake_vram = int(os.getenv("ARIV_FAKE_VRAM_MB", "0"))
     vram_mb = gpu_probe[1] if gpu_probe else fake_vram
     device_name = gpu_probe[0] if gpu_probe else "cpu"
