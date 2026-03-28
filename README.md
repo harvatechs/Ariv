@@ -15,6 +15,16 @@ A production-ready, frugal, sovereign AI system that orchestrates India's open-s
 
 **Now supporting all 22 official Indian languages with GUI and TUI interfaces!**
 
+## 🎯 Project Vision
+
+Ariv is built as a world-class open-source AI model orchestra focused on reliable, high-accuracy reasoning. Our goal is to continuously improve ARC-AGI-2 style performance through better orchestration, evaluation discipline, and efficient inference on accessible hardware.
+
+Core principles:
+- **Open by default**: Build with open models, open benchmarks, and reproducible workflows.
+- **Accuracy first**: Optimize for correctness and grounded reasoning quality, not just speed.
+- **Practical excellence**: Deliver research-grade methods in production-ready tooling.
+- **Inclusive intelligence**: Keep multilingual Indian language support as a first-class objective.
+
 ## 🌟 What's New in Version 2.0
 
 ### ✨ Major Enhancements
@@ -656,3 +666,4 @@ Apache License Version 2.0 - See [LICENSE](LICENSE)
 - **[TUI Guide](docs/tui/README.md)** - Detailed TUI interface guide
 - **[Contributing Guide](docs/CONTRIBUTING.md)** - How to contribute to Ariv
 - **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment instructions
+- **[Production Benchmark Report](benchmarks/results/PRODUCTION_BENCHMARK_REPORT.md)** - Latest benchmark summary for release sign-off
